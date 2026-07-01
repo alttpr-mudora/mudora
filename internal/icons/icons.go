@@ -130,6 +130,12 @@ func fileFor(item string) (string, bool) {
 		return "compass", true
 	case strings.HasPrefix(item, "Map"):
 		return "map", true
+	case strings.HasPrefix(item, "Crystal"):
+		if item == "Crystal 5" || item == "Crystal 6" {
+			return "crystal-red", true
+		} else {
+			return "crystal", true
+		}
 	}
 	return "", false
 }

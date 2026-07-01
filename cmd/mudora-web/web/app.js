@@ -61,13 +61,19 @@ function buildRegion(group, collapsed) {
   header.className = "region-header";
   header.addEventListener("click", () => section.classList.toggle("expanded"));
 
+  const dungeonReward = document.createElement("div");
+  dungeonReward.className = "region-dungeon-reward";
+  header.appendChild(dungeonReward);
+
   const name = document.createElement("span");
   name.className = "region-name";
   name.textContent = group.region;
   header.appendChild(name);
 
   for (const loc of group.locations) {
-    if (loc.progression && loc.icon) {
+    if (loc.location.includes("Prize")) {
+      dungeonReward.appendChild(makeIcon(loc.icon, loc.item));
+    } else if (loc.progression && loc.icon) {
       header.appendChild(makeIcon(loc.icon, loc.item));
     }
   }

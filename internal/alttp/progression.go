@@ -45,7 +45,13 @@ var Progression = map[string]bool{
 	"Pendant of Courage": true,
 	"Pendant of Power":   true,
 	"Pendant of Wisdom":  true,
-	"Crystal":            true,
+	"Crystal 1":          true,
+	"Crystal 2":          true,
+	"Crystal 3":          true,
+	"Crystal 4":          true,
+	"Crystal 5":          true,
+	"Crystal 6":          true,
+	"Crystal 7":          true,
 }
 
 func IsProgression(item string) bool { return Progression[item] }

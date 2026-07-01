@@ -79,6 +79,7 @@ body {
 }
 
 .region-name { font-weight: 600; min-width: 12rem; }
+.region-dungeon-reward { width: 1rem; }
 
 .region-rows { display: none; }
 .region.expanded .region-rows { display: block; }
