@@ -21,7 +21,7 @@ func turtleRockLocationRules() map[string]Rule {
 			items.HasAtLeast("Lamp", settings.LampRequireCount) &&
 			items.Has("Cane of Somaria") && items.Has("Big Key (Turtle Rock)") &&
 			items.HasAtLeast("Key (Turtle Rock)", 3) &&
-			(items.Has("Cape") || items.Has("Cane of Byrna") || items.CanBlockLasers())
+			(settings.ItemPlacementAdvanced || items.Has("Cape") || items.Has("Cane of Byrna") || items.CanBlockLasers())
 	}
 
 	return map[string]Rule{

@@ -36,11 +36,11 @@ func darkWorldLocationRules() map[string]Rule {
 		},
 		"Pyramid": alwaysAccessible,
 		"Pyramid Fairy - Left": func(items *Items, settings *Settings, regions RegionAccess) bool {
-			return items.HasAtLeast("Crystal", 2) && regions("South Dark World") &&
+			return items.Has("Crystal 5") && items.Has("Crystal 6") && regions("South Dark World") &&
 				items.Has("Moon Pearl") && items.Has("Hammer")
 		},
 		"Pyramid Fairy - Right": func(items *Items, settings *Settings, regions RegionAccess) bool {
-			return items.HasAtLeast("Crystal", 2) && regions("South Dark World") &&
+			return items.Has("Crystal 5") && items.Has("Crystal 6") && regions("South Dark World") &&
 				items.Has("Moon Pearl") && items.Has("Hammer")
 		},
 

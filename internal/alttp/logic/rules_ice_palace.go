@@ -35,7 +35,8 @@ func icePalaceLocationRules() map[string]Rule {
 				items.Has("Hammer") && items.CanLiftRocks() &&
 				CanBeatKholdstare(items, settings) &&
 				items.Has("Big Key (Ice Palace)") &&
-				items.HasAtLeast("Key (Ice Palace)", 2)
+				((settings.ItemPlacementAdvanced && items.Has("Cane of Somaria") && items.Has("Key (Ice Palace)")) ||
+					items.HasAtLeast("Key (Ice Palace)", 2))
 		},
 	}
 }

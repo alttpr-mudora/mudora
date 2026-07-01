@@ -16,6 +16,8 @@ type Settings struct {
 	// Per-seed required medallion; empty means unknown/unsatisfied.
 	MiseryMireMedallion string
 	TurtleRockMedallion string
+
+	CrystalsRequiredForTower int
 }
 
 func DefaultSettings() *Settings {
@@ -26,10 +28,11 @@ func DefaultSettings() *Settings {
 		CatchableFairies:          true,
 		RupeeBow:                  false,
 		BottleFillMagicRatio:      1.0,
-		ItemPlacementAdvanced:     false,
+		ItemPlacementAdvanced:     true,
 		LampRequireCount:          1,
 		CanBootsClip:              false,
 		CanSuperSpeed:             false,
 		CanOneFrameClipOW:         false,
+		CrystalsRequiredForTower:  7,
 	}
 }

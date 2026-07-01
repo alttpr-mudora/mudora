@@ -5,7 +5,7 @@ func ganonsTowerCanEnter(items *Items, settings *Settings, regions RegionAccess)
 		(settings.ItemPlacementAdvanced ||
 			((settings.SwordlessMode || items.HasSword(2)) && items.HasHealth(12) &&
 				(items.HasBottle(2) || items.HasArmor(1)))) &&
-		items.Has("Moon Pearl") && items.HasAtLeast("Crystal", 7) &&
+		items.Has("Moon Pearl") && items.CrystalCount() >= settings.CrystalsRequiredForTower &&
 		regions("East Dark World Death Mountain")
 }
 
@@ -66,7 +66,7 @@ func ganonsTowerLocationRules() map[string]Rule {
 		"Ganon's Tower - Bob's Chest": func(items *Items, settings *Settings, regions RegionAccess) bool {
 			return hammerHookshotOrFireRodSomaria(items, settings, regions) &&
 				items.HasAtLeast("Key (Ganon's Tower)", 3) &&
-				(items.Has("Fire Rod") || (items.Has("Ether") && items.HasSword(1)))
+				(settings.ItemPlacementAdvanced || items.Has("Fire Rod") || (items.Has("Ether") && items.HasSword(1)))
 		},
 		"Ganon's Tower - Tile Room": func(items *Items, settings *Settings, regions RegionAccess) bool {
 			return items.Has("Cane of Somaria")

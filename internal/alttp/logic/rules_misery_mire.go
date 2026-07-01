@@ -7,7 +7,8 @@ func miseryMireCanEnter(items *Items, settings *Settings, regions RegionAccess) 
 				(items.HasBottle(2) || items.HasArmor(1)))) &&
 		settings.MiseryMireMedallion != "" && items.Has(settings.MiseryMireMedallion) &&
 		(settings.SwordlessMode || items.HasSword(1)) &&
-		items.Has("Moon Pearl") && items.Has("Hookshot") &&
+		items.Has("Moon Pearl") &&
+		((settings.ItemPlacementAdvanced && items.Has("Pegasus Boots")) || items.Has("Hookshot")) &&
 		items.CanKillMostThings(settings, 8) && regions("Mire")
 }
 
