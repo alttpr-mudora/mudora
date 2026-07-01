@@ -68,6 +68,10 @@ var Regions = map[string][]string{
 		"Desert Ledge",
 		"Lake Hylia Island",
 		"Sunken Treasure",
+		"Sick Kid",
+		"Potion Shop",
+		"King Zora",
+		"Flute Spot",
 	},
 	"Hyrule Castle": {
 		"Sanctuary",
@@ -151,6 +155,7 @@ var Regions = map[string][]string{
 		"Digging Game",
 		"Mire Shed - Left",
 		"Mire Shed - Right",
+		"Blacksmith",
 	},
 	"Palace of Darkness": {
 		"Palace of Darkness - Shooter Room",

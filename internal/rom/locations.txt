@@ -210,3 +210,8 @@
 0x3493B  Pyramid Bottle
 0xEE185  Catfish
 0xF69FA  Old Man
+0x18002A  Blacksmith
+0x180014  Potion Shop
+0x18014A  Flute Spot
+0x339CF  Sick Kid
+0xEE1C3  King Zora

@@ -11,7 +11,11 @@ func icePalaceCanEnter(items *Items, settings *Settings, regions RegionAccess) b
 
 func icePalaceLocationRules() map[string]Rule {
 	spikeRoom := func(items *Items, settings *Settings, regions RegionAccess) bool {
-		return items.Has("Hookshot")
+		return items.Has("Hookshot") ||
+			(items.Has("Key (Ice Palace)") &&
+				(settings.LocationHasItem("Ice Palace - Spike Room", "Big Key (Ice Palace)") ||
+					settings.LocationHasItem("Ice Palace - Big Key Chest", "Big Key (Ice Palace)") ||
+					settings.LocationHasItem("Ice Palace - Map Chest", "Big Key (Ice Palace)")))
 	}
 
 	hammerLiftAndSpikeRoom := func(items *Items, settings *Settings, regions RegionAccess) bool {

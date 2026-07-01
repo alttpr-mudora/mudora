@@ -14,8 +14,18 @@ func ganonsTowerLocationRules() map[string]Rule {
 		return items.Has("Hammer") && items.Has("Hookshot")
 	}
 
-	randomizerRoom := func(items *Items, settings *Settings, regions RegionAccess) bool {
-		return hammerAndHookshot(items, settings, regions) && items.HasAtLeast("Key (Ganon's Tower)", 4)
+	randomizerRoom := func(siblings ...string) Rule {
+		return func(items *Items, settings *Settings, regions RegionAccess) bool {
+			if !hammerAndHookshot(items, settings, regions) {
+				return false
+			}
+			for _, s := range siblings {
+				if settings.LocationHasItem(s, "Big Key (Ganon's Tower)") {
+					return items.HasAtLeast("Key (Ganon's Tower)", 3)
+				}
+			}
+			return items.HasAtLeast("Key (Ganon's Tower)", 4)
+		}
 	}
 
 	hammerHookshotOrFireRodSomaria := func(items *Items, settings *Settings, regions RegionAccess) bool {
@@ -46,18 +56,51 @@ func ganonsTowerLocationRules() map[string]Rule {
 		"Ganon's Tower - DMs Room - Bottom Left":  hammerAndHookshot,
 		"Ganon's Tower - DMs Room - Bottom Right": hammerAndHookshot,
 
-		"Ganon's Tower - Randomizer Room - Top Left":     randomizerRoom,
-		"Ganon's Tower - Randomizer Room - Top Right":    randomizerRoom,
-		"Ganon's Tower - Randomizer Room - Bottom Left":  randomizerRoom,
-		"Ganon's Tower - Randomizer Room - Bottom Right": randomizerRoom,
+		"Ganon's Tower - Randomizer Room - Top Left": randomizerRoom(
+			"Ganon's Tower - Randomizer Room - Top Right",
+			"Ganon's Tower - Randomizer Room - Bottom Left",
+			"Ganon's Tower - Randomizer Room - Bottom Right",
+		),
+		"Ganon's Tower - Randomizer Room - Top Right": randomizerRoom(
+			"Ganon's Tower - Randomizer Room - Top Left",
+			"Ganon's Tower - Randomizer Room - Bottom Left",
+			"Ganon's Tower - Randomizer Room - Bottom Right",
+		),
+		"Ganon's Tower - Randomizer Room - Bottom Left": randomizerRoom(
+			"Ganon's Tower - Randomizer Room - Top Right",
+			"Ganon's Tower - Randomizer Room - Top Left",
+			"Ganon's Tower - Randomizer Room - Bottom Right",
+		),
+		"Ganon's Tower - Randomizer Room - Bottom Right": randomizerRoom(
+			"Ganon's Tower - Randomizer Room - Top Right",
+			"Ganon's Tower - Randomizer Room - Top Left",
+			"Ganon's Tower - Randomizer Room - Bottom Left",
+		),
 
 		"Ganon's Tower - Firesnake Room": func(items *Items, settings *Settings, regions RegionAccess) bool {
-			return hammerAndHookshot(items, settings, regions) && items.HasAtLeast("Key (Ganon's Tower)", 3)
+			if !hammerAndHookshot(items, settings, regions) {
+				return false
+			}
+			randomizerRoomsHaveBigKey := settings.LocationHasItem("Ganon's Tower - Randomizer Room - Top Right", "Big Key (Ganon's Tower)") ||
+				settings.LocationHasItem("Ganon's Tower - Randomizer Room - Top Left", "Big Key (Ganon's Tower)") ||
+				settings.LocationHasItem("Ganon's Tower - Randomizer Room - Bottom Left", "Big Key (Ganon's Tower)") ||
+				settings.LocationHasItem("Ganon's Tower - Randomizer Room - Bottom Right", "Big Key (Ganon's Tower)")
+			firesnakeSelfLocked := settings.LocationHasItem("Ganon's Tower - Firesnake Room", "Key (Ganon's Tower)")
+			if (randomizerRoomsHaveBigKey || firesnakeSelfLocked) && items.HasAtLeast("Key (Ganon's Tower)", 2) {
+				return true
+			}
+			return items.HasAtLeast("Key (Ganon's Tower)", 3)
 		},
 		"Ganon's Tower - Map Chest": func(items *Items, settings *Settings, regions RegionAccess) bool {
-			return items.Has("Hammer") &&
-				(items.Has("Hookshot") || (settings.ItemPlacementAdvanced && items.Has("Pegasus Boots"))) &&
-				items.HasAtLeast("Key (Ganon's Tower)", 4)
+			if !items.Has("Hammer") || !(items.Has("Hookshot") || (settings.ItemPlacementAdvanced && items.Has("Pegasus Boots"))) {
+				return false
+			}
+			selfLocked := settings.LocationHasItem("Ganon's Tower - Map Chest", "Big Key (Ganon's Tower)") ||
+				settings.LocationHasItem("Ganon's Tower - Map Chest", "Key (Ganon's Tower)")
+			if selfLocked {
+				return items.HasAtLeast("Key (Ganon's Tower)", 3)
+			}
+			return items.HasAtLeast("Key (Ganon's Tower)", 4)
 		},
 		"Ganon's Tower - Big Chest": func(items *Items, settings *Settings, regions RegionAccess) bool {
 			return items.Has("Big Key (Ganon's Tower)") && items.HasAtLeast("Key (Ganon's Tower)", 3) &&

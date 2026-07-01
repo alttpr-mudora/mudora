@@ -17,8 +17,19 @@ func miseryMireLocationRules() map[string]Rule {
 		return items.Has("Key (Misery Mire)") || items.Has("Big Key (Misery Mire)")
 	}
 
-	torchesAndThreeKeys := func(items *Items, settings *Settings, regions RegionAccess) bool {
-		return items.CanLightTorches() && items.HasAtLeast("Key (Misery Mire)", 3)
+	bigKeySelfLocked := func(settings *Settings) bool {
+		return settings.LocationHasItem("Misery Mire - Compass Chest", "Big Key (Misery Mire)") ||
+			settings.LocationHasItem("Misery Mire - Big Key Chest", "Big Key (Misery Mire)")
+	}
+
+	keyGatedRoom := func(items *Items, settings *Settings, regions RegionAccess) bool {
+		if !items.CanLightTorches() {
+			return false
+		}
+		if bigKeySelfLocked(settings) && items.HasAtLeast("Key (Misery Mire)", 2) {
+			return true
+		}
+		return items.HasAtLeast("Key (Misery Mire)", 3)
 	}
 
 	return map[string]Rule{
@@ -28,8 +39,8 @@ func miseryMireLocationRules() map[string]Rule {
 		"Misery Mire - Spike Chest":   alwaysAccessible,
 		"Misery Mire - Main Lobby":    mainLobbyOrBigKey,
 		"Misery Mire - Map Chest":     mainLobbyOrBigKey,
-		"Misery Mire - Big Key Chest": torchesAndThreeKeys,
-		"Misery Mire - Compass Chest": torchesAndThreeKeys,
+		"Misery Mire - Big Key Chest": keyGatedRoom,
+		"Misery Mire - Compass Chest": keyGatedRoom,
 		"Misery Mire - Bridge Chest":  alwaysAccessible,
 		"Misery Mire - Boss": func(items *Items, settings *Settings, regions RegionAccess) bool {
 			return miseryMireCanEnter(items, settings, regions) &&

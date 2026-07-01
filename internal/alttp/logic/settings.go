@@ -18,6 +18,13 @@ type Settings struct {
 	TurtleRockMedallion string
 
 	CrystalsRequiredForTower int
+
+	// Per-seed location -> item, from rom.Inspect. Nil means unknown.
+	LocationItems map[string]string
+}
+
+func (s *Settings) LocationHasItem(location, item string) bool {
+	return s.LocationItems[location] == item
 }
 
 func DefaultSettings() *Settings {

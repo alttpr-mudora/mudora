@@ -23,6 +23,9 @@ func palaceOfDarknessLocationRules() map[string]Rule {
 			return items.CanShootArrows(settings, 1)
 		},
 		"Palace of Darkness - Big Key Chest": func(items *Items, settings *Settings, regions RegionAccess) bool {
+			if settings.LocationHasItem("Palace of Darkness - Big Key Chest", "Key (Palace of Darkness)") {
+				return items.Has("Key (Palace of Darkness)")
+			}
 			if hammerAndArrowsAndLamp(items, settings) {
 				return items.HasAtLeast("Key (Palace of Darkness)", 6)
 			}
@@ -47,6 +50,12 @@ func palaceOfDarknessLocationRules() map[string]Rule {
 			return items.HasAtLeast("Key (Palace of Darkness)", 3)
 		},
 		"Palace of Darkness - Harmless Hellway": func(items *Items, settings *Settings, regions RegionAccess) bool {
+			if settings.LocationHasItem("Palace of Darkness - Harmless Hellway", "Key (Palace of Darkness)") {
+				if hammerAndArrowsAndLamp(items, settings) {
+					return items.HasAtLeast("Key (Palace of Darkness)", 4)
+				}
+				return items.HasAtLeast("Key (Palace of Darkness)", 3)
+			}
 			if hammerAndArrowsAndLamp(items, settings) {
 				return items.HasAtLeast("Key (Palace of Darkness)", 6)
 			}

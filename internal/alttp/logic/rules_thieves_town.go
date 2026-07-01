@@ -13,6 +13,9 @@ func thievesTownLocationRules() map[string]Rule {
 			return items.Has("Key (Thieves Town)") && items.Has("Big Key (Thieves Town)")
 		},
 		"Thieves' Town - Big Chest": func(items *Items, settings *Settings, regions RegionAccess) bool {
+			if settings.LocationHasItem("Thieves' Town - Big Chest", "Key (Thieves Town)") {
+				return items.Has("Hammer") && items.Has("Big Key (Thieves Town)")
+			}
 			return items.Has("Hammer") && items.Has("Key (Thieves Town)") && items.Has("Big Key (Thieves Town)")
 		},
 		"Thieves' Town - Blind's Cell": func(items *Items, settings *Settings, regions RegionAccess) bool {
