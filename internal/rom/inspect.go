@@ -74,6 +74,14 @@ func Inspect(data []byte) []Entry {
 		entries = append(entries, Entry{Address: addr, Location: loc, Item: item})
 	}
 
+	for dungeon, prize := range DungeonPrizes(data) {
+		loc, ok := prizeLocationName[dungeon]
+		if !ok {
+			continue
+		}
+		entries = append(entries, Entry{Address: prizeAddrs[dungeon].category, Location: loc, Item: prize})
+	}
+
 	sort.Slice(entries, func(i, j int) bool { return entries[i].Address < entries[j].Address })
 	return entries
 }

@@ -18,6 +18,19 @@ var prizeAddrs = map[string]prizeAddr{
 	"Turtle Rock":        {0x120A7, 0x180075},
 }
 
+var prizeLocationName = map[string]string{
+	"Eastern Palace":     "Eastern Palace - Prize",
+	"Desert Palace":      "Desert Palace - Prize",
+	"Tower of Hera":      "Tower of Hera - Prize",
+	"Palace of Darkness": "Palace of Darkness - Prize",
+	"Swamp Palace":       "Swamp Palace - Prize",
+	"Skull Woods":        "Skull Woods - Prize",
+	"Thieves Town":       "Thieves' Town - Prize",
+	"Ice Palace":         "Ice Palace - Prize",
+	"Misery Mire":        "Misery Mire - Prize",
+	"Turtle Rock":        "Turtle Rock - Prize",
+}
+
 var prizeSignatures = map[[2]byte]string{
 	{0x04, 0x69}: "Pendant of Courage",
 	{0x01, 0x69}: "Pendant of Wisdom",
