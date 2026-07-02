@@ -32,8 +32,18 @@ func ganonsTowerLocationRules() map[string]Rule {
 		return hammerAndHookshot(items, settings, regions) || (items.Has("Fire Rod") && items.Has("Cane of Somaria"))
 	}
 
-	compassRoom := func(items *Items, settings *Settings, regions RegionAccess) bool {
-		return items.Has("Fire Rod") && items.Has("Cane of Somaria") && items.HasAtLeast("Key (Ganon's Tower)", 4)
+	compassRoom := func(siblings ...string) Rule {
+		return func(items *Items, settings *Settings, regions RegionAccess) bool {
+			if !items.Has("Fire Rod") || !items.Has("Cane of Somaria") {
+				return false
+			}
+			for _, s := range siblings {
+				if settings.LocationHasItem(s, "Big Key (Ganon's Tower)") {
+					return items.HasAtLeast("Key (Ganon's Tower)", 3)
+				}
+			}
+			return items.HasAtLeast("Key (Ganon's Tower)", 4)
+		}
 	}
 
 	bigKeyRoom := func(items *Items, settings *Settings, regions RegionAccess) bool {
@@ -117,10 +127,26 @@ func ganonsTowerLocationRules() map[string]Rule {
 		"Ganon's Tower - Hope Room - Left":  alwaysAccessible,
 		"Ganon's Tower - Hope Room - Right": alwaysAccessible,
 
-		"Ganon's Tower - Compass Room - Top Left":     compassRoom,
-		"Ganon's Tower - Compass Room - Top Right":    compassRoom,
-		"Ganon's Tower - Compass Room - Bottom Left":  compassRoom,
-		"Ganon's Tower - Compass Room - Bottom Right": compassRoom,
+		"Ganon's Tower - Compass Room - Top Left": compassRoom(
+			"Ganon's Tower - Compass Room - Top Right",
+			"Ganon's Tower - Compass Room - Bottom Left",
+			"Ganon's Tower - Compass Room - Bottom Right",
+		),
+		"Ganon's Tower - Compass Room - Top Right": compassRoom(
+			"Ganon's Tower - Compass Room - Top Left",
+			"Ganon's Tower - Compass Room - Bottom Left",
+			"Ganon's Tower - Compass Room - Bottom Right",
+		),
+		"Ganon's Tower - Compass Room - Bottom Left": compassRoom(
+			"Ganon's Tower - Compass Room - Top Right",
+			"Ganon's Tower - Compass Room - Top Left",
+			"Ganon's Tower - Compass Room - Bottom Right",
+		),
+		"Ganon's Tower - Compass Room - Bottom Right": compassRoom(
+			"Ganon's Tower - Compass Room - Top Right",
+			"Ganon's Tower - Compass Room - Top Left",
+			"Ganon's Tower - Compass Room - Bottom Left",
+		),
 
 		"Ganon's Tower - Big Key Chest":               bigKeyRoom,
 		"Ganon's Tower - Big Key Room - Left":         bigKeyRoom,

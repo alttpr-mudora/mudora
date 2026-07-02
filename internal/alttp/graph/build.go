@@ -26,7 +26,7 @@ func Build(itemAt map[string]string, settings *logic.Settings) *Graph {
 
 	var candidates []string
 	for loc, item := range itemAt {
-		if isProgression(item) {
+		if isProgression(item) && !excludedLocations[loc] {
 			candidates = append(candidates, loc)
 		}
 	}

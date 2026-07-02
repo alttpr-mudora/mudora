@@ -35,7 +35,6 @@ var progressionItems = map[string]bool{
 	"Boomerang":            true,
 	"Boomerang (Red)":      true,
 	"Shovel":               true,
-	"Bombs (10)":           true,
 
 	"Bottle":                true,
 	"Bottle (Red Potion)":   true,
@@ -101,4 +100,10 @@ var progressionItems = map[string]bool{
 
 func isProgression(item string) bool {
 	return progressionItems[item]
+}
+
+// Bottle-fill trade locations; excluded regardless of what's placed there.
+var excludedLocations = map[string]bool{
+	"Pyramid Bottle":   true,
+	"Waterfall Bottle": true,
 }

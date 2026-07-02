@@ -199,6 +199,7 @@
 0x180159  Turtle Rock - Boss
 0x180160  Desert Palace - Torch
 0x180161  Ganon's Tower - Bob's Torch
+0x180162  Tower of Hera - Basement Cage
 0x289B0  Master Sword Pedestal
 0x2DF45  Link's Uncle
 0x2EB18  Bottle Merchant

@@ -16,12 +16,14 @@ import (
 func main() {
 	var romPath string
 	var solve bool
+	var reachable bool
 	var version bool
 
 	flag.StringVar(&romPath, "rom", "", "path to ALttPR ROM file")
 	flag.StringVar(&romPath, "r", "", "path to ALttPR ROM file (shorthand)")
 	flag.BoolVar(&solve, "solve", false, "print the shortest path to Ganon's Tower")
 	flag.BoolVar(&solve, "s", false, "shorthand for -solve")
+	flag.BoolVar(&reachable, "reachable", false, "print all reachable items")
 	flag.BoolVar(&version, "version", false, "print the mudora version")
 	flag.BoolVar(&version, "v", false, "shorthand for -version")
 	flag.Parse()
@@ -45,6 +47,11 @@ func main() {
 
 	if solve {
 		printSolution(alttp.Solve(data))
+		return
+	}
+
+	if reachable {
+		printSolution(alttp.Reachable(data))
 		return
 	}
 
