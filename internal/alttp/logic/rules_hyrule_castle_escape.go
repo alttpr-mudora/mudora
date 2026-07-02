@@ -34,3 +34,9 @@ func hyruleCastleEscapeLocationRules() map[string]Rule {
 func hyruleCastleEscapeRegionRules() map[string]Rule {
 	return map[string]Rule{}
 }
+
+func hyruleCastleEscapeCompletionRules() map[string]Rule {
+	return map[string]Rule{
+		"Hyrule Castle Escape": alwaysAccessible,
+	}
+}

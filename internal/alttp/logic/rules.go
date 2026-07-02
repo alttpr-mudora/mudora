@@ -54,6 +54,7 @@ var regionRuleSets = []func() map[string]Rule{
 }
 
 var completionRuleSets = []func() map[string]Rule{
+	hyruleCastleEscapeCompletionRules,
 	easternPalaceCompletionRules,
 	desertPalaceCompletionRules,
 	hyruleCastleTowerCompletionRules,
