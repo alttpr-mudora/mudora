@@ -68,6 +68,10 @@ var Regions = map[string][]string{
 		"Desert Ledge",
 		"Lake Hylia Island",
 		"Sunken Treasure",
+		"Sick Kid",
+		"Potion Shop",
+		"King Zora",
+		"Flute Spot",
 	},
 	"Hyrule Castle": {
 		"Sanctuary",
@@ -88,6 +92,7 @@ var Regions = map[string][]string{
 		"Eastern Palace - Big Key Chest",
 		"Eastern Palace - Map Chest",
 		"Eastern Palace - Boss",
+		"Eastern Palace - Prize",
 	},
 	"Desert Palace": {
 		"Desert Palace - Big Chest",
@@ -96,6 +101,7 @@ var Regions = map[string][]string{
 		"Desert Palace - Big Key Chest",
 		"Desert Palace - Compass Chest",
 		"Desert Palace - Boss",
+		"Desert Palace - Prize",
 	},
 	"Death Mountain": {
 		"Old Man",
@@ -119,6 +125,7 @@ var Regions = map[string][]string{
 		"Tower of Hera - Compass Chest",
 		"Tower of Hera - Big Chest",
 		"Tower of Hera - Boss",
+		"Tower of Hera - Prize",
 	},
 	"Castle Tower": {
 		"Castle Tower - Room 03",
@@ -151,6 +158,7 @@ var Regions = map[string][]string{
 		"Digging Game",
 		"Mire Shed - Left",
 		"Mire Shed - Right",
+		"Blacksmith",
 	},
 	"Palace of Darkness": {
 		"Palace of Darkness - Shooter Room",
@@ -167,6 +175,7 @@ var Regions = map[string][]string{
 		"Palace of Darkness - Dark Maze - Top",
 		"Palace of Darkness - Dark Maze - Bottom",
 		"Palace of Darkness - Boss",
+		"Palace of Darkness - Prize",
 	},
 	"Swamp Palace": {
 		"Swamp Palace - Entrance",
@@ -179,6 +188,7 @@ var Regions = map[string][]string{
 		"Swamp Palace - Flooded Room - Right",
 		"Swamp Palace - Waterfall Room",
 		"Swamp Palace - Boss",
+		"Swamp Palace - Prize",
 	},
 	"Skull Woods": {
 		"Skull Woods - Big Chest",
@@ -189,6 +199,7 @@ var Regions = map[string][]string{
 		"Skull Woods - Pot Prison",
 		"Skull Woods - Pinball Room",
 		"Skull Woods - Boss",
+		"Skull Woods - Prize",
 	},
 	"Thieves' Town": {
 		"Thieves' Town - Attic",
@@ -199,6 +210,7 @@ var Regions = map[string][]string{
 		"Thieves' Town - Big Chest",
 		"Thieves' Town - Blind's Cell",
 		"Thieves' Town - Boss",
+		"Thieves' Town - Prize",
 	},
 	"Ice Palace": {
 		"Ice Palace - Big Key Chest",
@@ -209,6 +221,7 @@ var Regions = map[string][]string{
 		"Ice Palace - Iced T Room",
 		"Ice Palace - Big Chest",
 		"Ice Palace - Boss",
+		"Ice Palace - Prize",
 	},
 	"Misery Mire": {
 		"Misery Mire - Big Chest",
@@ -219,6 +232,7 @@ var Regions = map[string][]string{
 		"Misery Mire - Map Chest",
 		"Misery Mire - Spike Chest",
 		"Misery Mire - Boss",
+		"Misery Mire - Prize",
 	},
 	"Turtle Rock": {
 		"Turtle Rock - Chain Chomps",
@@ -233,6 +247,7 @@ var Regions = map[string][]string{
 		"Turtle Rock - Eye Bridge - Top Left",
 		"Turtle Rock - Eye Bridge - Top Right",
 		"Turtle Rock - Boss",
+		"Turtle Rock - Prize",
 	},
 	"Ganon's Tower": {
 		"Ganon's Tower - Bob's Torch",

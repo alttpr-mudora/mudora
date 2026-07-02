@@ -32,13 +32,14 @@ body {
   border-radius: 4px;
 }
 
-#clear, #rom-input::file-selector-button {
+button, #rom-input::file-selector-button {
   background: var(--section-bg);
   color: var(--fg);
   border: 1px solid #555;
   border-radius: 4px;
   padding: 0.4rem 0.8rem;
   cursor: pointer;
+  align-self: center;
 }
 
 #version {
@@ -59,8 +60,13 @@ body {
   font-size: 0.9rem;
 }
 
-#results {
+#results, #playthrough {
   padding: 0 1rem 1rem;
+}
+
+.heading-container {
+  display: flex;
+  justify-content: space-between;
 }
 
 .region {
@@ -79,6 +85,7 @@ body {
 }
 
 .region-name { font-weight: 600; min-width: 12rem; }
+.region-dungeon-reward { width: 1rem; }
 
 .region-rows { display: none; }
 .region.expanded .region-rows { display: block; }
