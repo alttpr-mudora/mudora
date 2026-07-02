@@ -58,8 +58,8 @@ func main() {
 	}
 }
 
-func printSolution(g *graph.Graph) {
-	for i, e := range g.Edges {
+func printSolution(playthrough *graph.Graph) {
+	for i, e := range playthrough.Edges {
 		locs := append([]string(nil), e.Locations...)
 		sort.Strings(locs)
 
@@ -69,7 +69,7 @@ func printSolution(g *graph.Graph) {
 		}
 		fmt.Printf("Step %d (%d check%s):\n", i+1, len(locs), plural)
 		for _, loc := range locs {
-			fmt.Printf("  %-56s %s\n", loc, g.ItemAt[loc])
+			fmt.Printf("  %-56s %s\n", loc, playthrough.ItemAt[loc])
 		}
 	}
 }

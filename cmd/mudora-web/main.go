@@ -5,6 +5,7 @@ package main
 import (
 	"encoding/base64"
 	"encoding/json"
+	"sort"
 	"syscall/js"
 
 	"github.com/alttpr-mudora/mudora/internal"
@@ -27,6 +28,7 @@ type group struct {
 
 func main() {
 	js.Global().Set("mudoraInspect", js.FuncOf(inspect))
+	js.Global().Set("mudoraSolve", js.FuncOf(solve))
 	js.Global().Set("mudoraVersion", js.ValueOf(internal.Version))
 	select {}
 }
@@ -60,6 +62,41 @@ func inspect(_ js.Value, args []js.Value) any {
 	}
 
 	b, err := json.Marshal(out)
+	if err != nil {
+		return errResult(err.Error())
+	}
+	return string(b)
+}
+
+func solve(_ js.Value, args []js.Value) any {
+	if len(args) < 1 {
+		return errResult("missing ROM bytes")
+	}
+
+	romBytes := args[0]
+	data := make([]byte, romBytes.Get("length").Int())
+	js.CopyBytesToGo(data, romBytes)
+
+	playthrough := alttp.Solve(data)
+	steps := make(map[int][]placement)
+
+	for step, e := range playthrough.Edges {
+		locs := append([]string(nil), e.Locations...)
+		sort.Strings(locs)
+
+		steps[step] = make([]placement, 0)
+
+		for _, loc := range locs {
+			item := playthrough.ItemAt[loc]
+			pl := placement{Location: loc, Item: item, Progression: alttp.IsProgression(item)}
+			if png, ok := icons.PNG(item); ok {
+				pl.Icon = "data:image/png;base64," + base64.StdEncoding.EncodeToString(png)
+			}
+			steps[step] = append(steps[step], pl)
+		}
+	}
+
+	b, err := json.Marshal(steps)
 	if err != nil {
 		return errResult(err.Error())
 	}

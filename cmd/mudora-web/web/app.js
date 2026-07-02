@@ -3,6 +3,7 @@ const romInput = document.getElementById("rom-input");
 const search = document.getElementById("search");
 const clearBtn = document.getElementById("clear");
 const results = document.getElementById("results");
+const playthrough = document.getElementById("playthrough");
 const version = document.getElementById("version");
 
 let romBytes = null;
@@ -46,10 +47,78 @@ function render(query) {
     return;
   }
 
+  function createHeader(name, expandOrCollapseAllFn) {
+    const headingContainer = document.createElement("div");
+    headingContainer.className = "heading-container";
+
+    const heading = document.createElement("h1");
+    heading.innerText = name;
+    headingContainer.appendChild(heading);
+
+    const expandOrCollapseAllButton = document.createElement("button");
+    expandOrCollapseAllButton.innerText = "Expand/Collapse All";
+    expandOrCollapseAllButton.onclick = (e) => {
+      e.preventDefault();
+      expandOrCollapseAllFn();
+    };
+    headingContainer.appendChild(expandOrCollapseAllButton);
+
+    return headingContainer;
+  }
+
+  function expandOrCollapseAll(parent) {
+    const regions = parent.querySelectorAll(".region");
+
+    let allExpanded = true;
+
+    for (const region of regions) {
+      if (!region.classList.contains("expanded")) {
+        allExpanded = false;
+        break;
+      }
+    }
+
+    for (const region of regions) {
+      if (allExpanded) {
+        region.classList.remove("expanded");
+      } else {
+        region.classList.add("expanded");
+      }
+    }
+  }
+
   results.innerHTML = "";
+  results.appendChild(createHeader("All Locations", () => expandOrCollapseAll(results)));
+
   const collapsed = query.trim() === "";
   for (const group of parsed) {
     results.appendChild(buildRegion(group, collapsed));
+  }
+
+  const rawPlaythrough = window.mudoraSolve(romBytes);
+  const parsedPlaythrough = JSON.parse(rawPlaythrough);
+
+  if (parsedPlaythrough && parsedPlaythrough.error) {
+    status.textContent = "Error: " + parsedPlaythrough.error;
+    return;
+  }
+
+  const hr = document.getElementById("results-playthrough-divider");
+  hr.removeAttribute("hidden");
+
+  playthrough.innerHTML = "";
+  playthrough.appendChild(createHeader("Playthrough - Shortest Path", () => expandOrCollapseAll(playthrough)));
+
+  let step = 0;
+  while (parsedPlaythrough[step] !== undefined) {   
+    const locations = [];
+    for (const locId in parsedPlaythrough[step]) {
+      locations.push(parsedPlaythrough[step][locId]);
+    }
+
+    playthrough.appendChild(buildStep(step + 1, locations, collapsed));
+
+    step += 1;
   }
 }
 
@@ -81,6 +150,30 @@ function buildRegion(group, collapsed) {
   const rows = document.createElement("div");
   rows.className = "region-rows";
   for (const loc of group.locations) {
+    rows.appendChild(buildRow(loc));
+  }
+
+  section.appendChild(header);
+  section.appendChild(rows);
+  return section;
+}
+
+function buildStep(step, locations, collapsed) {
+  const section = document.createElement("div");
+  section.className = "region" + (collapsed ? "" : " expanded");
+
+  const header = document.createElement("div");
+  header.className = "region-header";
+  header.addEventListener("click", () => section.classList.toggle("expanded"));
+
+  const name = document.createElement("span");
+  name.className = "region-name";
+  name.textContent = `Step ${step}`;
+  header.appendChild(name);
+
+  const rows = document.createElement("div");
+  rows.className = "region-rows";
+  for (const loc of locations) {
     rows.appendChild(buildRow(loc));
   }
 
