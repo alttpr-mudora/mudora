@@ -40,11 +40,15 @@ func (s VisitedSet) withAll(locs []string) VisitedSet {
 var preCollectedItems = []string{"Rescue Zelda", "Bombs (10)"}
 
 func itemsFor(s VisitedSet, itemAt map[string]string) *logic.Items {
+	return itemsForLocations(s.locations(), itemAt)
+}
+
+func itemsForLocations(locs []string, itemAt map[string]string) *logic.Items {
 	items := logic.NewItems()
 	for _, item := range preCollectedItems {
 		items.Add(item)
 	}
-	for _, loc := range s.locations() {
+	for _, loc := range locs {
 		if item, ok := itemAt[loc]; ok {
 			items.Add(item)
 		}

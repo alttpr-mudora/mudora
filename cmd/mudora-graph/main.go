@@ -25,8 +25,7 @@ func main() {
 
 	data, err := os.ReadFile(os.Args[1])
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "mudora-graph:", err)
-		os.Exit(1)
+		fail(err)
 	}
 
 	out := strings.TrimSuffix(os.Args[1], ".sfc") + ".dot"
@@ -45,22 +44,30 @@ func main() {
 	settings.MiseryMireMedallion = medallions["Misery Mire"]
 	settings.TurtleRockMedallion = medallions["Turtle Rock"]
 
-	g := graph.Build(itemAt, settings)
+	full := graph.Build(itemAt, settings)
+	shortest := graph.MinimalPathTo(itemAt, settings, "Ganons Tower")
 
 	iconDir, err := filepath.Abs(strings.TrimSuffix(out, ".dot") + "_icons")
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "mudora-graph:", err)
-		os.Exit(1)
+		fail(err)
 	}
-	if err := graph.WriteIcons(iconDir, g); err != nil {
-		fmt.Fprintln(os.Stderr, "mudora-graph:", err)
-		os.Exit(1)
+	if err := graph.WriteIcons(iconDir, full); err != nil {
+		fail(err)
 	}
 
+	writeGraph(full, out, iconDir)
+	shortestOut := strings.TrimSuffix(out, ".dot") + ".shortest.dot"
+	writeGraph(shortest, shortestOut, iconDir)
+
+	fmt.Fprintf(os.Stderr, "full: states=%d edges=%d\n", len(full.Order), len(full.Edges))
+	fmt.Fprintf(os.Stderr, "shortest to Ganons Tower: states=%d edges=%d\n", len(shortest.Order), len(shortest.Edges))
+	fmt.Fprintln(os.Stderr, "wrote", out, "and", shortestOut, "(icons in", iconDir+")")
+}
+
+func writeGraph(g *graph.Graph, out, iconDir string) {
 	dotFile, err := os.Create(out)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "mudora-graph:", err)
-		os.Exit(1)
+		fail(err)
 	}
 	defer dotFile.Close()
 	graph.WriteDOT(dotFile, g, iconDir)
@@ -68,12 +75,13 @@ func main() {
 	legendPath := strings.TrimSuffix(out, ".dot") + ".legend.txt"
 	legendFile, err := os.Create(legendPath)
 	if err != nil {
-		fmt.Fprintln(os.Stderr, "mudora-graph:", err)
-		os.Exit(1)
+		fail(err)
 	}
 	defer legendFile.Close()
 	graph.WriteLegend(legendFile, g)
+}
 
-	fmt.Fprintf(os.Stderr, "states=%d edges=%d\n", len(g.Order), len(g.Edges))
-	fmt.Fprintln(os.Stderr, "wrote", out, legendPath, "and icons to", iconDir)
+func fail(err error) {
+	fmt.Fprintln(os.Stderr, "mudora-graph:", err)
+	os.Exit(1)
 }
