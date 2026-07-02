@@ -1,6 +1,6 @@
 package logic
 
-func towerOfHeraMain(items *Items, settings *Settings, regions RegionAccess) bool {
+func towerOfHeraMain(items *Items, _ *Settings, regions RegionAccess) bool {
 	return (items.Has("Magic Mirror") || (items.Has("Hookshot") && items.Has("Hammer"))) &&
 		regions("West Death Mountain")
 }
