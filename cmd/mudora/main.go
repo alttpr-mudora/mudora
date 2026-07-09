@@ -23,6 +23,7 @@ func main() {
 	var startByte string
 	var byteCount int
 	var romHash bool
+	var permalink bool
 
 	flag.StringVar(&romPath, "rom", "", "path to ALttPR ROM file")
 	flag.StringVar(&romPath, "r", "", "path to ALttPR ROM file (shorthand)")
@@ -36,6 +37,7 @@ func main() {
 	flag.IntVar(&byteCount, "byte-count", 0, "byte count for -read-bytes")
 	flag.IntVar(&byteCount, "bc", 0, "shortand for -byte-count")
 	flag.BoolVar(&romHash, "hash", false, "print ROM hash items")
+	flag.BoolVar(&permalink, "permalink", false, "print the alttpr.com permalink hash embedded in the ROM")
 	flag.BoolVar(&version, "version", false, "print the mudora version")
 	flag.BoolVar(&version, "v", false, "shorthand for -version")
 	flag.Parse()
@@ -74,6 +76,11 @@ func main() {
 
 	if romHash {
 		printRomHash(data)
+		return
+	}
+
+	if permalink {
+		printPermalink(data)
 		return
 	}
 
@@ -140,6 +147,16 @@ func printBytes(data []byte, startByte string, byteCount int) {
 			fmt.Print(" ")
 		}
 	}
+}
+
+func printPermalink(data []byte) {
+	hash, ok := rom.GetPermalink(data)
+	if !ok {
+		fmt.Fprintln(os.Stderr, "mudora: failed to retrieve permalink")
+		os.Exit(1)
+	}
+
+	fmt.Println("https://alttpr.com/h/" + hash)
 }
 
 func printRomHash(data []byte) {

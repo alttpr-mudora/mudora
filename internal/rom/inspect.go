@@ -2,6 +2,7 @@ package rom
 
 import (
 	"sort"
+	"strings"
 )
 
 // Entry is the item placed at a known location in a ROM.
@@ -20,6 +21,8 @@ const (
 	chestCount    = 168
 	pcHash        = 0x180215
 	hashItemCount = 5
+	pcSeedString  = 0x7FC0 // SNES cartridge title field, overwritten with "VT <permalink>"
+	seedStringLen = 21
 )
 
 // inPlaceRegion is a range of bytes encrypted in-place using XXTEA.
@@ -118,6 +121,20 @@ func GetHash(data []byte) ([]string, bool) {
 	}
 
 	return hashItems, true
+}
+
+func GetPermalink(data []byte) (string, bool) {
+	if pcSeedString+seedStringLen > len(data) {
+		return "", false
+	}
+
+	raw := strings.TrimSpace(string(data[pcSeedString : pcSeedString+seedStringLen]))
+	hash, ok := strings.CutPrefix(raw, "VT ")
+	if !ok {
+		return "", false
+	}
+
+	return hash, true
 }
 
 func ReadBytes(data []byte, base int64, amt int64) []byte {
