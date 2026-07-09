@@ -123,7 +123,7 @@ func GetHash(data []byte) ([]string, bool) {
 	return hashItems, true
 }
 
-func GetPermalink(data []byte) (string, bool) {
+func GetPermalinkHash(data []byte) (string, bool) {
 	if pcSeedString+seedStringLen > len(data) {
 		return "", false
 	}

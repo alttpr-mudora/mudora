@@ -1,4 +1,5 @@
 const status = document.getElementById("status");
+const permalink = document.getElementById("permalink");
 const romInput = document.getElementById("rom-input");
 const search = document.getElementById("search");
 const clearBtn = document.getElementById("clear");
@@ -39,6 +40,16 @@ clearBtn.addEventListener("click", () => {
 
 function render(query) {
   if (!ready || !romBytes) return;
+
+  const permalinkRaw = window.mudoraPermalink(romBytes);
+  const parsedPermalink = JSON.parse(permalinkRaw);
+  if (parsedPermalink && parsedPermalink.error) {
+    permalink.textContent = "Unable to resolve permalink.";
+  } else {
+    permalink.textContent = parsedPermalink.permalink;
+    permalink.href = parsedPermalink.permalink;
+  }
+  document.getElementById("permalink-container").removeAttribute("hidden");
 
   const raw = window.mudoraInspect(romBytes, query);
   const parsed = JSON.parse(raw);

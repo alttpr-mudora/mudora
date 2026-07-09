@@ -150,7 +150,7 @@ func printBytes(data []byte, startByte string, byteCount int) {
 }
 
 func printPermalink(data []byte) {
-	hash, ok := rom.GetPermalink(data)
+	hash, ok := rom.GetPermalinkHash(data)
 	if !ok {
 		fmt.Fprintln(os.Stderr, "mudora: failed to retrieve permalink")
 		os.Exit(1)

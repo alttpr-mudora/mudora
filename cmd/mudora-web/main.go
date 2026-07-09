@@ -5,6 +5,7 @@ package main
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"sort"
 	"syscall/js"
 
@@ -29,6 +30,8 @@ type group struct {
 func main() {
 	js.Global().Set("mudoraInspect", js.FuncOf(inspect))
 	js.Global().Set("mudoraSolve", js.FuncOf(solve))
+	js.Global().Set("mudoraItemHash", js.FuncOf(itemHash))
+	js.Global().Set("mudoraPermalink", js.FuncOf(permalink))
 	js.Global().Set("mudoraVersion", js.ValueOf(internal.Version))
 	select {}
 }
@@ -100,6 +103,39 @@ func solve(_ js.Value, args []js.Value) any {
 	if err != nil {
 		return errResult(err.Error())
 	}
+	return string(b)
+}
+
+func itemHash(_ js.Value, args []js.Value) any {
+	if len(args) < 1 {
+		return errResult("missing ROM bytes")
+	}
+
+	return string("")
+}
+
+func permalink(_ js.Value, args []js.Value) any {
+	if len(args) < 1 {
+		return errResult("missing ROM bytes")
+	}
+
+	romBytes := args[0]
+	data := make([]byte, romBytes.Get("length").Int())
+	js.CopyBytesToGo(data, romBytes)
+
+	hash, ok := rom.GetPermalinkHash(data)
+	if !ok {
+		return errResult("unable to resolve ROM permalink")
+	}
+
+	out := make(map[string]string)
+	out["permalink"] = fmt.Sprintf("https://alttpr.com/h/%s", hash)
+
+	b, err := json.Marshal(out)
+	if err != nil {
+		return errResult(err.Error())
+	}
+
 	return string(b)
 }
 
