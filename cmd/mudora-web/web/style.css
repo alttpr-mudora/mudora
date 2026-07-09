@@ -76,7 +76,7 @@ button, #rom-input::file-selector-button {
   justify-content: space-between;
 }
 
-#permalink-container {
+#permalink-container, #startscreen-code {
   display: flex;
 }
 

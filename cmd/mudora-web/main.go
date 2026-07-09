@@ -27,6 +27,11 @@ type group struct {
 	Locations []placement `json:"locations"`
 }
 
+type itemIcon struct {
+	Name string `json:"name"`
+	Icon string `json:"icon,omitempty"`
+}
+
 func main() {
 	js.Global().Set("mudoraInspect", js.FuncOf(inspect))
 	js.Global().Set("mudoraSolve", js.FuncOf(solve))
@@ -111,7 +116,30 @@ func itemHash(_ js.Value, args []js.Value) any {
 		return errResult("missing ROM bytes")
 	}
 
-	return string("")
+	romBytes := args[0]
+	data := make([]byte, romBytes.Get("length").Int())
+	js.CopyBytesToGo(data, romBytes)
+
+	itemNames, ok := rom.GetHash(data)
+	if !ok {
+		return errResult("unable to resolve ROM item hash")
+	}
+
+	items := make([]itemIcon, len(itemNames))
+
+	for i, name := range itemNames {
+		ic := itemIcon{Name: name}
+		if png, ok := icons.PNG(name); ok {
+			ic.Icon = "data:image/png;base64," + base64.StdEncoding.EncodeToString(png)
+		}
+
+		items[i] = ic
+	}
+	b, err := json.Marshal(items)
+	if err != nil {
+		return errResult(err.Error())
+	}
+	return string(b)
 }
 
 func permalink(_ js.Value, args []js.Value) any {
@@ -128,10 +156,7 @@ func permalink(_ js.Value, args []js.Value) any {
 		return errResult("unable to resolve ROM permalink")
 	}
 
-	out := make(map[string]string)
-	out["permalink"] = fmt.Sprintf("https://alttpr.com/h/%s", hash)
-
-	b, err := json.Marshal(out)
+	b, err := json.Marshal(map[string]string{"permalink": fmt.Sprintf("https://alttpr.com/h/%s", hash)})
 	if err != nil {
 		return errResult(err.Error())
 	}
