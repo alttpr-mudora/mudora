@@ -54,10 +54,17 @@ button, #rom-input::file-selector-button {
 }
 #bar a:hover { text-decoration: underline; }
 
-#status {
+.status {
   margin: 0.5rem 1rem;
   color: #aaa;
   font-size: 0.9rem;
+}
+
+#permalink {
+  font-size: 0.9rem;
+  margin: 0.5rem 1rem;
+  color: var(--accent);
+  text-decoration: none;
 }
 
 #results, #playthrough {
@@ -67,6 +74,10 @@ button, #rom-input::file-selector-button {
 .heading-container {
   display: flex;
   justify-content: space-between;
+}
+
+#permalink-container, #startscreen-code {
+  display: flex;
 }
 
 .region {

@@ -5,6 +5,7 @@ package main
 import (
 	"encoding/base64"
 	"encoding/json"
+	"fmt"
 	"sort"
 	"syscall/js"
 
@@ -26,9 +27,16 @@ type group struct {
 	Locations []placement `json:"locations"`
 }
 
+type itemIcon struct {
+	Name string `json:"name"`
+	Icon string `json:"icon,omitempty"`
+}
+
 func main() {
 	js.Global().Set("mudoraInspect", js.FuncOf(inspect))
 	js.Global().Set("mudoraSolve", js.FuncOf(solve))
+	js.Global().Set("mudoraItemHash", js.FuncOf(itemHash))
+	js.Global().Set("mudoraPermalink", js.FuncOf(permalink))
 	js.Global().Set("mudoraVersion", js.ValueOf(internal.Version))
 	select {}
 }
@@ -100,6 +108,59 @@ func solve(_ js.Value, args []js.Value) any {
 	if err != nil {
 		return errResult(err.Error())
 	}
+	return string(b)
+}
+
+func itemHash(_ js.Value, args []js.Value) any {
+	if len(args) < 1 {
+		return errResult("missing ROM bytes")
+	}
+
+	romBytes := args[0]
+	data := make([]byte, romBytes.Get("length").Int())
+	js.CopyBytesToGo(data, romBytes)
+
+	itemNames, ok := rom.GetHash(data)
+	if !ok {
+		return errResult("unable to resolve ROM item hash")
+	}
+
+	items := make([]itemIcon, len(itemNames))
+
+	for i, name := range itemNames {
+		ic := itemIcon{Name: name}
+		if png, ok := icons.PNG(name); ok {
+			ic.Icon = "data:image/png;base64," + base64.StdEncoding.EncodeToString(png)
+		}
+
+		items[i] = ic
+	}
+	b, err := json.Marshal(items)
+	if err != nil {
+		return errResult(err.Error())
+	}
+	return string(b)
+}
+
+func permalink(_ js.Value, args []js.Value) any {
+	if len(args) < 1 {
+		return errResult("missing ROM bytes")
+	}
+
+	romBytes := args[0]
+	data := make([]byte, romBytes.Get("length").Int())
+	js.CopyBytesToGo(data, romBytes)
+
+	hash, ok := rom.GetPermalinkHash(data)
+	if !ok {
+		return errResult("unable to resolve ROM permalink")
+	}
+
+	b, err := json.Marshal(map[string]string{"permalink": fmt.Sprintf("https://alttpr.com/h/%s", hash)})
+	if err != nil {
+		return errResult(err.Error())
+	}
+
 	return string(b)
 }
 

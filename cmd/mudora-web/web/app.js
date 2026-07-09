@@ -1,4 +1,6 @@
 const status = document.getElementById("status");
+const permalink = document.getElementById("permalink");
+const startScreenCode = document.getElementById("startscreen-code");
 const romInput = document.getElementById("rom-input");
 const search = document.getElementById("search");
 const clearBtn = document.getElementById("clear");
@@ -39,6 +41,27 @@ clearBtn.addEventListener("click", () => {
 
 function render(query) {
   if (!ready || !romBytes) return;
+
+  const permalinkRaw = window.mudoraPermalink(romBytes);
+  const parsedPermalink = tryParseJSON(permalinkRaw);
+  if (parsedPermalink && parsedPermalink.error) {
+    permalink.textContent = "Unable to resolve permalink.";
+  } else {
+    permalink.textContent = parsedPermalink.permalink;
+    permalink.href = parsedPermalink.permalink;
+  }
+  document.getElementById("permalink-container").style.display = "";
+
+  const startscreenCodeRaw = window.mudoraItemHash(romBytes);
+  const parsedCode = tryParseJSON(startscreenCodeRaw);
+  if (parsedCode && !parsedCode.error) {
+    for (const item of parsedCode) {
+      startScreenCode.appendChild(makeIcon(item.icon, item.name));
+    }
+  } else {
+    startScreenCode.textContent = "Unable to parse ROM code.";
+  }
+  startScreenCode.style.display = "";
 
   const raw = window.mudoraInspect(romBytes, query);
   const parsed = JSON.parse(raw);
@@ -206,4 +229,15 @@ function makeIcon(src, alt) {
   img.src = src;
   img.alt = alt;
   return img;
+}
+
+function tryParseJSON(raw) {
+  try {
+    parsed = JSON.parse(raw)
+
+    return parsed
+  } catch (e) {
+    console.error("Error parsing JSON", e)
+    return { error: e }
+  }
 }

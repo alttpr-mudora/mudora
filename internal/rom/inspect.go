@@ -1,6 +1,9 @@
 package rom
 
-import "sort"
+import (
+	"sort"
+	"strings"
+)
 
 // Entry is the item placed at a known location in a ROM.
 type Entry struct {
@@ -16,6 +19,10 @@ const (
 	chestBase     = 0xE96E // item-byte base of the stride-3 table (non-race format)
 	chestStride   = 3
 	chestCount    = 168
+	pcHash        = 0x180215
+	hashItemCount = 5
+	pcSeedString  = 0x7FC0 // SNES cartridge title field, overwritten with "VT <permalink>"
+	seedStringLen = 21
 )
 
 // inPlaceRegion is a range of bytes encrypted in-place using XXTEA.
@@ -84,6 +91,63 @@ func Inspect(data []byte) []Entry {
 
 	sort.Slice(entries, func(i, j int) bool { return entries[i].Address < entries[j].Address })
 	return entries
+}
+
+// Start screen hash symbols uses a separate lookup table than normal items.
+// Names match items.txt/icons.go.
+var hashSymbols = map[byte]string{
+	0: "Bow", 1: "Boomerang", 2: "Hookshot", 3: "Bomb",
+	4: "Mushroom", 5: "Powder", 6: "Ice Rod", 7: "Pendant of Courage",
+	8: "Bombos", 9: "Ether", 10: "Quake", 11: "Lamp",
+	12: "Hammer", 13: "Shovel", 14: "Flute", 15: "Bug Net", 16: "Book of Mudora",
+	17: "Bottle", 18: "Green Potion", 19: "Cane of Somaria", 20: "Cape",
+	21: "Magic Mirror", 22: "Pegasus Boots", 23: "Progressive Glove", 24: "Flippers",
+	25: "Moon Pearl", 26: "Progressive Shield", 27: "Progressive Mail", 28: "Heart",
+	29: "Map", 30: "Compass", 31: "Big Key",
+}
+
+func GetHash(data []byte) ([]string, bool) {
+	hashItems := make([]string, hashItemCount)
+
+	for i := range hashItemCount {
+		addr := pcHash + i
+		value := data[addr]
+		item, ok := hashSymbols[value]
+		if !ok {
+			return nil, false
+		}
+
+		hashItems[i] = item
+	}
+
+	return hashItems, true
+}
+
+func GetPermalinkHash(data []byte) (string, bool) {
+	if pcSeedString+seedStringLen > len(data) {
+		return "", false
+	}
+
+	raw := strings.TrimSpace(string(data[pcSeedString : pcSeedString+seedStringLen]))
+	hash, ok := strings.CutPrefix(raw, "VT ")
+	if !ok {
+		return "", false
+	}
+
+	return hash, true
+}
+
+func ReadBytes(data []byte, base int64, amt int64) []byte {
+	bytes := make([]byte, amt)
+
+	for offset := range amt {
+		address := base + int64(offset)
+		value := data[address]
+
+		bytes[offset] = value
+	}
+
+	return bytes
 }
 
 func isChestAddr(addr uint32) bool {
