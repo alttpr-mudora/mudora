@@ -3,6 +3,7 @@ const permalink = document.getElementById("permalink");
 const startScreenCode = document.getElementById("startscreen-code");
 const romInput = document.getElementById("rom-input");
 const search = document.getElementById("search");
+const searchBtn = document.getElementById("search-button");
 const clearBtn = document.getElementById("clear");
 const results = document.getElementById("results");
 const playthrough = document.getElementById("playthrough");
@@ -28,12 +29,19 @@ romInput.addEventListener("change", async () => {
   if (!file) return;
   romBytes = new Uint8Array(await file.arrayBuffer());
   search.disabled = false;
-  clearBtn.disabled = false;
   status.textContent = `Inspecting ${file.name}`;
   render(search.value);
 });
 
-search.addEventListener("input", () => render(search.value));
+search.addEventListener("input", () => {
+  console.log(search.value);
+  const disabled = search.value.trim() === "";
+  searchBtn.disabled = disabled;
+  clearBtn.disabled = disabled;
+});
+searchBtn.addEventListener("click", () => {
+  render(search.value);
+})
 clearBtn.addEventListener("click", () => {
   search.value = "";
   render("");
@@ -55,6 +63,7 @@ function render(query) {
   const startscreenCodeRaw = window.mudoraItemHash(romBytes);
   const parsedCode = tryParseJSON(startscreenCodeRaw);
   if (parsedCode && !parsedCode.error) {
+    startScreenCode.textContent = "";
     for (const item of parsedCode) {
       startScreenCode.appendChild(makeIcon(item.icon, item.name));
     }

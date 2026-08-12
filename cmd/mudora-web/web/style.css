@@ -42,6 +42,11 @@ button, #rom-input::file-selector-button {
   align-self: center;
 }
 
+button:disabled {
+  background: var(--bg);
+  color: var(--section-bg)
+}
+
 #version {
   margin-left: auto;
   color: #888;
