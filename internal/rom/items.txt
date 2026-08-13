@@ -101,8 +101,8 @@
 0x64  Progressive Bow
 0x65  Progressive Bow
 0x6A  Triforce
-0x6B  PowerStar
-0x6C  TriforcePiece
+0x6B  Power Star
+0x6C  Triforce Piece
 0x70  MapLW
 0x71  MapDW
 0x72  Map (Ganon's Tower)

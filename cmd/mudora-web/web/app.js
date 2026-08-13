@@ -235,6 +235,7 @@ function buildRow(loc) {
 function makeIcon(src, alt) {
   const img = document.createElement("img");
   img.className = "icon";
+  img.style.imageRendering = "pixelated";
   img.src = src;
   img.alt = alt;
   return img;

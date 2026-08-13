@@ -52,6 +52,9 @@ var Progression = map[string]bool{
 	"Crystal 5":          true,
 	"Crystal 6":          true,
 	"Crystal 7":          true,
+
+	"Triforce":       true,
+	"Triforce Piece": true,
 }
 
 func IsProgression(item string) bool { return Progression[item] }

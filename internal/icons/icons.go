@@ -103,6 +103,10 @@ var itemFile = map[string]string{
 	"Pendant of Power":   "pendant-red",
 	"Pendant of Wisdom":  "pendant-blue",
 	"Crystal":            "crystal",
+
+	// Special.
+	"Triforce":       "triforce",
+	"Triforce Piece": "triforce-piece",
 }
 
 func PNG(item string) ([]byte, bool) {
